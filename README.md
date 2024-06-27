@@ -16,6 +16,7 @@ The following files contain templates for the standard types of pages featured i
 | Page                                   | [h-page.md](templates/how-to/h-page.md) | example |
 | **Reference**                          |                           |         |
 | Overview                               | [r-overview.md](templates/reference/r-overview.md) | example |
+| System requirements                    | [r-system-requirements.md](templates/reference/r-system-requirements.md) | example |
 | Release Notes Overview                 | [release-notes-overview.md](templates/reference/release-notes-overview.md) | example |
 | Release Notes Revision X | [release-notes-revision.md](templates/reference/release-notes-revision.md) | example |
 | Page                                   | [r-page.md](templates/reference/r-page.md) | example |

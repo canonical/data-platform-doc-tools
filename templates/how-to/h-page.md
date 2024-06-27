@@ -5,7 +5,7 @@
 ## Prerequisites
 * {Minimum charm revision}
 * ...
-* Fulfill the general [system requirements](/t/{})
+* Fulfil the general [system requirements](/t/{})
 
 ## Summary
 > You can omit the Summary if there is only 1 section
