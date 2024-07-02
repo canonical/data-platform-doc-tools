@@ -1,6 +1,6 @@
 # How to {perform some task}
 
-{Short text about what this guide contains.}
+{Short text about what actions this guide will cover.}
 
 ## Prerequisites
 * {Minimum charm revision}
@@ -8,7 +8,7 @@
 * Fulfil the general [system requirements](/t/{})
 
 ## Summary
-> You can omit the Summary if there is only 1 section
+<!-- You can omit the Summary if there is only 1 section, or the page is very short -->
 * [{Section A}](#heading--{section-a})
 * [{Section B}](#heading--{section-b})
 
