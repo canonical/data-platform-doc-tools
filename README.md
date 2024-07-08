@@ -23,6 +23,14 @@ The following files contain templates for the standard types of pages featured i
 | **Explanation**                        |                           |         |
 | Page                                   | [e-page.md](templates/explanation/e-page.md) | example |
 
+### Markdown and syntax
+
+All templates are written with Discourse-compatible markdown. Some elements are Discourse-specific and will not be parsed by other Markdown editors (e.g. `[note] [/note]`).
+
+Sections that must be filled in by the writer are marked in {curly brackets}. I tried to be consistent so that, when the same content gets repeated, you can easily find and replace. 
+
+Markdown comments in the format `<!-- sample comment -->` are meant as guidance and should be removed before publishing the Discourse topic.
+
 ## Documentation review
 To start a documentation review process:
 1. Create a new branch (use Jira ticket name when applicable)
