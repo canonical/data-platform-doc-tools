@@ -33,12 +33,12 @@ Markdown comments in the format `<!-- sample comment -->` are meant as guidance 
 
 ## Documentation review
 To start a documentation review process:
-1. Create a new branch (use Jira ticket name when applicable)
-2. Create a new markdown file in your charm's directory and Diataxis group. Use the discourse slug as the filename.
-E.g. `postgresql/how-to/h-deploy-lxd.md`
+1. Create a new branch (use Jira ticket ID when applicable)
+2. Create a new markdown file in your charm's directory, ignoring Diataxis groups. Use the discourse slug as the filename.
+E.g. `postgresql/h-deploy-lxd.md`
 
 > [!NOTE]  
-> Ignore any sub-directories/groups below the 4 main Diataxis categories
+> Ignore the hierarchy of nested pages. If a page is underneath one or more groups, use the charm's root directory anyway.
 
 3. Submit your PR and add reviewers
 4. Once the review process is over, copy the reviewed page onto discourse
