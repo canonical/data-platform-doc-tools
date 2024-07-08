@@ -7,21 +7,21 @@ Templates and miscellaneous tooling to help with writing and maintaining docs.
 The following files contain templates for the standard types of pages featured in Data Platform docs. 
 
 | Name                                   | template                  | example |
-|----------------------------------------|---------------------------|:-------:|
-| Overview (i.e. home page)              | [overview.md](templates/overview.md) | example |
+|----------------------------------------|---------------------------|---------|
+| Overview (i.e. home page)              | [overview.md](templates/overview.md) | [Charmed MongoDB](https://charmhub.io/mongodb) |
 | **Tutorial**                           |                           |         |
-| Overview                               | [t-overview.md](templates/tutorial/t-overview.md) | example |
-| Page                                   | [t-page.md](templates/tutorial/t-page.md) | example |
+| Overview                               | [t-overview.md](templates/tutorial/t-overview.md) | [Charmed OpenSearch Tutorial](https://charmhub.io/opensearch/docs/t-overview) |
+| Page                                   | [t-page.md](templates/tutorial/t-page.md) | [Charmed PostgreSQL > Set up the environment](https://charmhub.io/postgresql/docs/t-set-up) |
 | **How-To**                             |                           |         |
-| Page                                   | [h-page.md](templates/how-to/h-page.md) | example |
+| Page                                   | [h-page.md](templates/how-to/h-page.md) | pending |
 | **Reference**                          |                           |         |
-| Overview                               | [r-overview.md](templates/reference/r-overview.md) | example |
-| System requirements                    | [r-system-requirements.md](templates/reference/r-system-requirements.md) | example |
-| Release Notes Overview                 | [release-notes-overview.md](templates/reference/release-notes-overview.md) | example |
-| Release Notes Revision X | [release-notes-revision.md](templates/reference/release-notes-revision.md) | example |
-| Page                                   | [r-page.md](templates/reference/r-page.md) | example |
+| Overview                               | [r-overview.md](templates/reference/r-overview.md) | [Charmed PostgreSQL Reference > Overview](https://charmhub.io/postgresql/docs/r-overview) |
+| System requirements                    | [r-system-requirements.md](templates/reference/r-system-requirements.md) | [Charmed OpenSearch Reference > System requirements](https://charmhub.io/opensearch/docs/r-system-requirements) |
+| Release Notes Overview                 | [release-notes-overview.md](templates/reference/release-notes-overview.md) | pending |
+| Release Notes Revision X | [release-notes-revision.md](templates/reference/release-notes-revision.md) | pending |
+| Page                                   | [r-page.md](templates/reference/r-page.md) | pending |
 | **Explanation**                        |                           |         |
-| Page                                   | [e-page.md](templates/explanation/e-page.md) | example |
+| Page                                   | [e-page.md](templates/explanation/e-page.md) | [Charmed MongoDB Explanation > Sharding](https://charmhub.io/mongodb/docs/e-sharding) |
 
 ### Markdown and syntax
 
