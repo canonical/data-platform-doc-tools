@@ -8,7 +8,7 @@ import re
 NAVTABLE_START_MARKER = "[details=Navigation]"
 NAVTABLE_END_MARKER = "[/details]"
 
-DOCS_PATH = pathlib.Path("docs-pgbouncer-vm/")
+DOCS_PATH = pathlib.Path("docs/")
 
 DIATAXIS_DICT = {"t-": "tutorial", "h-": "how-to", "r-": "reference", "e-": "explanation"}
 
