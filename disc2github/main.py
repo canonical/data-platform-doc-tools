@@ -51,7 +51,7 @@ def parse_navtable(overview_topic_raw: str):
     start_index += len(NAVTABLE_START_MARKER)
     end_index = overview_topic_raw.find(NAVTABLE_END_MARKER, start_index)
 
-    table_raw = overview_topic_raw[start_index:end_index].strip().split('\n') # remove whitespace and split by newline
+    table_raw = overview_topic_raw[start_index:end_index].strip().split('\n') # Remove whitespace and split by newline
     
     table_parsed = []
     column_labels = []
@@ -61,7 +61,7 @@ def parse_navtable(overview_topic_raw: str):
         elif row_index==1: continue
         else:
             row_dict = {column_labels[i]:v.strip() for i,v in enumerate(row_contents.split('|')) if i > 0 and i < len(column_labels) - 1}
-            if row_dict: # don't consider row if empty
+            if row_dict: # Don't consider row if empty
                 table_parsed.append(row_dict)
     
     return table_parsed
@@ -104,7 +104,7 @@ def get_diataxis_section(topic_slug: str):
 
     try:
         section = DIATAXIS_DICT[prefix]
-    except KeyError: # return empty string if no diataxis prefix found 
+    except KeyError: # Return empty string if no diataxis prefix found 
         return ""
 
     return section
@@ -146,8 +146,5 @@ if __name__ == "__main__":
             topic_raw = get_raw_markdown(topic.id)
             topic.path.parent.mkdir(parents=True, exist_ok=True)
             topic.path.write_text(topic_raw)
-        
-        print("success")
     except:
-        print("failed somewhere")
         exit()
