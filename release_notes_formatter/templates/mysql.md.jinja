@@ -1,0 +1,36 @@
+{% extends 'base.md.jinja' %}
+
+{% block packaging %}* [mysql-server-8.0 `v8.0.37`]
+* [mysql-router `v8.0.37`]
+* [mysql-shell `v8.0.37`]
+* [prometheus-mysqld-exporter `v0.14.0`]
+* [prometheus-mysqlrouter-exporter `v5.0.1`]
+* [percona-xtrabackup `v8.0.35`]
+{% endblock %}
+
+{% block libraries %}
+* **mysql `v0`**
+  * See the API reference in the [MySQL Libraries tab]
+* **grafana_agent `v0`** for integration with Grafana 
+    * Implements  `cos_agent` interface
+* **rolling_ops `v0`** for rolling operations across units 
+    * Implements `rolling_op` interface
+* **tempo_k8s `v1`, `v2`** for integration with Tempo charm
+    * Implements `tracing` interface
+* **tls_certificates_interface `v2`** for integration with TLS charms
+    * Implements `tls-certificates` interface
+{% endblock %}
+
+{% block links %}
+[MySQL Libraries tab]: https://charmhub.io/mysql/libraries
+
+[113/114]: https://github.com/canonical/charmed-mysql-snap/releases/tag/rev114
+[rock image]: https://github.com/canonical/charmed-mysql-rock/pkgs/container/charmed-mysql
+
+[mysql-server-8.0 `v8.0.37`]: 8.0.37-0ubuntu0.22.04.1
+[mysql-router `v8.0.37`]: 8.0.37-0ubuntu0.22.04.1
+[mysql-shell `v8.0.37`]: 8.0.37+dfsg-0ubuntu0.22.04.1~ppa3
+[prometheus-mysqld-exporter `v0.14.0`]: 0.14.0-0ubuntu0.22.04.1~ppa2
+[prometheus-mysqlrouter-exporter `v5.0.1`]: 5.0.1-0ubuntu0.22.04.1~ppa1
+[percona-xtrabackup `v8.0.35`]: 8.0.35-31-0ubuntu0.22.04.1~ppa3
+{% endblock %}

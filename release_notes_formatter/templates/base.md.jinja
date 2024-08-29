@@ -1,0 +1,74 @@
+>Reference > Release Notes > [All revisions] > Revision {{ charm.arm_revision }}/{{ charm.amd_revision }}
+
+# Revision {{ charm.arm_revision }}/{{ charm.amd_revision }}
+
+Dear community,
+
+Canonical's newest Charmed {{ charm.display_name }} operator has been published in the [{{ charm.channel }} channel].
+
+Due to the newly added support for `arm64` architecture, the {{ charm.display_name }} charm now releases two revisions simultaneously: 
+* Revision {{ charm.amd_revision }} is built for `amd64`
+* Revision {{ charm.arm_revision }} is built for `arm64`
+
+To make sure you deploy for the right architecture, we recommend setting an [architecture constraint](https://juju.is/docs/juju/constraint#heading--arch) for your entire juju model.
+
+Otherwise, it can be done at deploy time with the `--constraints` flag:
+```shell
+juju deploy {{ charm.app }}{% if charm.substrate == 'k8s' %}-k8s --trust{% endif %} --constraints arch=<arch> 
+```
+where `<arch>` can be `amd64` or `arm64`.
+
+---
+
+## Highlights 
+{{ commits.jira }}
+{{ commits.other }}
+
+## Bugfixes
+
+TODO: Fill in manually based on Highlights section
+
+## Dependencies and automations
+{{ commits.github_actions }}
+{{ commits.renovate }}
+
+## Technical details
+This section contains some technical details about the charm's contents and dependencies. 
+
+If you are jumping over several stable revisions, check [previous release notes][All revisions] before upgrading.
+
+### Requirements
+See the [system requirements] page for more details about software and hardware prerequisites.
+
+### Packaging
+
+This charm is based on the Charmed {{ charm.display_name }}{% if charm.packaging == 'snap' %} snap ([Revision 112/113][112/113]) {% else %} rock ([image][rock image]){% endif %}. It packages:
+{% block packaging %}
+
+{% endblock %}
+
+### Libraries and interfaces
+This charm revision imports the following libraries: {% block libraries %}
+
+{% endblock %}
+See the [`/lib/charms` directory on GitHub] for more details about all supported libraries.
+
+See the [`metadata.yaml` file on GitHub] for a full list of supported interfaces.
+
+
+<!-- Topics -->
+[All revisions]: {{ charm.all_revisions }}
+[system requirements]: {{ charm.system_requirements }}
+
+<!-- GitHub -->
+[`/lib/charms` directory on GitHub]: https://github.com/canonical/{{ charm.repo_name }}/tree/main/lib/charms
+[`metadata.yaml` file on GitHub]: https://github.com/canonical/{{ charm.repo_name }}/blob/main/metadata.yaml
+
+<!-- Charmhub -->
+[{{ charm.channel }} channel]: https://charmhub.io/{{ charm.app }}?channel={{ charm.channel }}
+
+<!-- Snap/Rock -->
+[`charmed-{{ charm.app }}` packaging]: https://github.com/canonical/charmed-{{ charm.app }}-{{ charm.packaging }}
+{% block links %}
+
+{% endblock %}

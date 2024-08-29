@@ -1,0 +1,53 @@
+# Jinja substitution variables
+
+postgresql:
+  channel: '14/stable'
+  min_juju: '2.9.49'
+  vm:
+    display_name: 'PostgreSQL'
+    all_revisions: '/t/11875'
+    system_requirements: '/t/11743'
+  k8s:
+    display_name: 'PostgreSQL K8s'
+    all_revisions: '/t/11872'
+    system_requirements: '/t/11744'
+
+mysql:
+  channel: '8.0/stable'
+  min_juju: '`v.3.4.3` or `3.5.2+`'
+  vm:
+    display_name: 'MySQL'
+    all_revisions: '/t/11881'
+    system_requirements: '/t/11742'
+  k8s:
+    display_name: 'MySQL K8s'
+    all_revisions: '/t/11878'
+    system_requirements: '/t/11421'
+
+# WIP: pgbouncer and mysql-router
+# TODO: Handle 3 or 4 builds/bases
+# TODO: create templates
+pgbouncer:
+  channel: '1/stable'
+  min_juju: '2.9.49'
+  vm:
+    display_name: 'PgBouncer'
+    all_revisions: '/t/12285'
+    system_requirements: '/t/12307'
+  k8s:
+    display_name: 'PgBouncer K8s'
+    all_revisions: '/t/12261'
+    system_requirements: '/t/12263'
+
+mysql-router:
+  min_juju: '`v.3.4.3` or `3.5.2+`'
+  vm:
+    channel: 'dpe/candidate'
+    display_name: 'MySQL Router'
+    all_revisions: '/t/'
+    system_requirements: '/t/'
+  k8s:
+    channel: '8.0/stable'
+    display_name: 'MySQL Router K8s'
+    all_revisions: '/t/'
+    system_requirements: '/t/'
