@@ -1,7 +1,7 @@
 {% extends 'base.md.jinja' %}
 
 {% block packaging %}
-This charm is based on the Charmed MySQL{% if charm.packaging == 'snap' %} [snap Revision 113/114] {% else %} [rock image]{% endif %}. It packages:
+This charm is based on the Charmed MySQL{% if packaging == 'snap' %} [snap Revision 113/114] {% else %} [rock image]{% endif %}. It packages:
 * [mysql-router `v8.0.37`]
 * [mysql-shell `v8.0.37`]
 * [prometheus-mysqlrouter-exporter `v5.0.1`]

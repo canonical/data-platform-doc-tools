@@ -1,22 +1,22 @@
->Reference > Release Notes > [All revisions] > Revision {{ charm.revisions.arm_22_04 }}/{{ charm.revisions.amd_22_04 }}
+>Reference > Release Notes > [All revisions] > Revision {{ revision.arm_22_04 }}/{{ revision.amd_22_04 }}
 
-# Revision {{ charm.revisions.arm_22_04 }}/{{ charm.revisions.amd_22_04 }}
+# Revision {{ revision.arm_22_04 }}/{{ revision.amd_22_04 }}
 
 Dear community,
 
-Canonical's newest Charmed {{ charm.display_name }} operator has been published in the [{{ charm.channel }} channel].
+Canonical's newest Charmed {{ display_name }} operator has been published in the [{{ channel }} channel].
 
-Due to the newly added support for `arm64` architecture, the {{ charm.display_name }} charm now releases multiple revisions simultaneously:
-* Revision {{ charm.revisions.amd_22_04 }} is built for `amd64` on Ubuntu 22.04 LTS
-{% if charm.revisions.amd_20_04 %}* Revision {{ charm.revisions.amd_20_04 }} is built for `amd64` on Ubuntu 20.04 LTS{% endif %}
-* Revision {{ charm.revisions.arm_22_04 }} is built for `arm64` on Ubuntu 22.04 LTS
-{% if charm.revisions.arm_20_04 %}* Revision {{ charm.revisions.arm_20_04 }} is built for `arm64` on Ubuntu 20.04 LTS {% endif %}
+Due to the newly added support for `arm64` architecture, the {{ display_name }} charm now releases multiple revisions simultaneously:
+* Revision {{ revision.amd_22_04 }} is built for `amd64` on Ubuntu 22.04 LTS
+{% if revision.amd_20_04 %}* Revision {{ revision.amd_20_04 }} is built for `amd64` on Ubuntu 20.04 LTS{% endif %}
+* Revision {{ revision.arm_22_04 }} is built for `arm64` on Ubuntu 22.04 LTS
+{% if revision.arm_20_04 %}* Revision {{ revision.arm_20_04 }} is built for `arm64` on Ubuntu 20.04 LTS {% endif %}
 
 To make sure you deploy for the right architecture, we recommend setting an [architecture constraint](https://juju.is/docs/juju/constraint#heading--arch) for your entire juju model.
 
 Otherwise, it can be done at deploy time with the `--constraints` flag:
 ```shell
-juju deploy {{ charm.app }}{% if charm.substrate == 'k8s' %}-k8s --trust{% endif %} --constraints arch=<arch> 
+juju deploy {{ app }}{% if substrate == 'k8s' %}-k8s --trust{% endif %} --constraints arch=<arch> 
 ```
 where `<arch>` can be `amd64` or `arm64`.
 
@@ -31,8 +31,7 @@ where `<arch>` can be `amd64` or `arm64`.
 <!--TODO: Fill in manually based on Highlights section.--> 
 
 ## Dependencies and automations
-{{ commits.github_actions }}
-{{ commits.renovate }}
+{{ commits.bot }}
 
 ## Technical details
 This section contains some technical details about the charm's contents and dependencies. 
@@ -43,11 +42,11 @@ If you are jumping over several stable revisions, check [previous release notes]
 See the [system requirements] page for more details about software and hardware prerequisites.
 
 ### Packaging
-
 {% block packaging %}
 {% endblock %}
 
 ### Libraries and interfaces
+
 This charm revision imports the following libraries:
 {% block libraries %}
 {% endblock %}
@@ -55,19 +54,22 @@ See the [`/lib/charms` directory on GitHub] for more details about all supported
 
 See the [`metadata.yaml` file on GitHub] for a full list of supported interfaces.
 
-
 <!-- Topics -->
-[All revisions]: {{ charm.all_revisions }}
-[system requirements]: {{ charm.system_requirements }}
+[All revisions]: {{ topic.all_revisions }}
+[system requirements]: {{ topic.system_requirements }}
 
 <!-- GitHub -->
-[`/lib/charms` directory on GitHub]: https://github.com/canonical/{{ charm.repo_name }}/tree/main/lib/charms
-[`metadata.yaml` file on GitHub]: https://github.com/canonical/{{ charm.repo_name }}/blob/main/metadata.yaml
+[`/lib/charms` directory on GitHub]: https://github.com/canonical/{{ repo_name }}/tree/main/lib/charms
+[`metadata.yaml` file on GitHub]: https://github.com/canonical/{{ repo_name }}/blob/main/metadata.yaml
 
 <!-- Charmhub -->
-[{{ charm.channel }} channel]: https://charmhub.io/{{ charm.app }}?channel={{ charm.channel }}
+[{{ channel }} channel]: https://charmhub.io/{{ app }}?channel={{ channel }}
 
 <!-- Snap/Rock -->
-[`charmed-{{ charm.app }}` packaging]: https://github.com/canonical/charmed-{{ charm.app }}-{{ charm.packaging }}
+[`charmed-{{ app }}` packaging]: https://github.com/canonical/charmed-{{ app }}-{{ packaging }}
 {% block links %}
 {% endblock %}
+
+<!-- Badges -->
+[amd64]: https://img.shields.io/badge/amd64-darkgreen
+[arm64]: https://img.shields.io/badge/arm64-blue

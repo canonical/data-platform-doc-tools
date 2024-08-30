@@ -1,19 +1,20 @@
 # Configuration parameters for Release Notes
 
 # (Required) Application name: mysql, postgresql, pgbouncer, mysql-router
-app: mysql
+app: pgbouncer
 
 # (Required) Substrate: vm, k8s
 substrate: vm
-amd_22_04: 466
-amd_20_04: ''
-arm_22_04: 465
-arm_20_04: ''
+
+# (Required) Old revision to compare (usually previous stable)
+last_revision: 281
+
+# (Required) Revisions for each arch/base
+amd_22_04: 396
+amd_20_04: 395
+arm_22_04: 397
+arm_20_04: 394
 
 # (Optional) Output file for formatted release notes
-# Default: Write to {app}-{substrate}-release-notes.md
+# Default: {app}-{substrate}-release-notes.md
 output_file: ''
-
-# (Optional) Input file with GitHub release notes text (Must contain '## What's Changed` heading) 
-# Default: Query GitHub API with tag based on revisions
-input_file: ''

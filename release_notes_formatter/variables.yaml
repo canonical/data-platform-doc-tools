@@ -24,7 +24,6 @@ mysql:
     all_revisions: '/t/11878'
     system_requirements: '/t/11421'
 
-# TODO: create templates
 pgbouncer:
   channel: '1/stable'
   min_juju: '2.9.49'
