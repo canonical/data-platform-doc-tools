@@ -1,8 +1,32 @@
 # Data Platform documentation tools
 
 Templates and miscellaneous tooling to help with writing and maintaining Data Platform Charmhub docs:
-* [Documentation review](#documentation-review)
 * [Generate release notes](#generate-release-notes)
+* [Documentation review](#documentation-review)
+
+## Generate release notes
+Create formatted release notes from GitHub commits for a range of revisions.
+
+### Usage
+Fill in the [`config.yaml`](release_notes_formatter/config.yaml) file with the relevant charm parameters, then run `generate.py`.
+
+```shell
+$ cd release_notes_formatter
+
+$ nano config.yaml
+app: postgresql
+substrate: k8s
+last_revision: 351
+
+amd_22_04: 363
+amd_20_04: 
+arm_22_04: 364
+arm_20_04: 
+
+$ python3 generate.py
+Requesting commits from GitHub API: https://api.github.com/repos/canonical/postgresql-k8s-operator/compare/rev351...rev364
+Formatted release notes for PostgreSQL K8s revisions dict_values([363, 0, 364, 0]) saved to 'postgresql-k8s-release-notes.md'
+```
 
 ## Documentation review
 To start a documentation review process:
@@ -16,42 +40,3 @@ E.g. `postgresql-k8s/h-deploy-gke.md`
 3. Submit your PR and add reviewers
 4. Once the review process is over, copy the reviewed page onto discourse
 5. Close the PR without merging.
-
-## Generate release notes
-[`release_notes_formatter`](release_notes_formatter/): Create formatted release notes from GitHub commits for a given revision.
-
-### Usage
-1. Fill in `config.yaml` with the relevant charm and revisions. See [Configuration](#configuration) for more information.
-
-2. Run `generate.py`.
-```shell
-cd release_notes_formatter
-python3 generate.py
-```
-
-### Configuration
-[`release_notes_formatter/config.yaml`](release_notes_formatter/config.yaml)
-
-This file contains parameters defining the product and revisions. The script loads it automatically.
-
-Example:
-```yaml
-# (Required) Application name: mysql, postgresql, pgbouncer, mysql-router
-app: mysql
-
-# (Required) Substrate: vm, k8s
-substrate: vm
-
-# (Required) Revisions for each build
-arm_revision: 269
-amd_revision: 268
-
-# (Optional) Output file for formatted release notes
-# Default: {app}-{substrate}-release-notes.md
-output_file: ''
-
-# (Optional) Input file with GitHub release notes text (Must contain '## What's Changed` heading) 
-# Default: GitHub API query with tag based on revisions
-input_file: ''
-```
-
