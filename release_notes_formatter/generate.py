@@ -61,26 +61,38 @@ def format_line(line):
 
     return line
 
-def get_charm_dict(arm_revision, amd_revision, app, substrate):
+def get_charm_dict(config):
     with open(VARIABLES_PATH) as f:
-        dict = yaml.load(f, Loader=yaml.FullLoader)
+        variables = yaml.load(f, Loader=yaml.FullLoader)
     
+    app = config['app']
+    substrate = config['substrate']
+    amd_22_04 = config['amd_22_04']
+    amd_20_04 = config['amd_20_04']
+    arm_22_04 = config['arm_22_04']
+    arm_20_04 = config['arm_20_04']
+   
     charm_dict = {}
     charm_dict['app'] = app
     charm_dict['substrate'] = substrate
-    charm_dict['display_name'] = dict[app][substrate]['display_name']
+    charm_dict['display_name'] = variables[app][substrate]['display_name']
     charm_dict['repo_name'] = f'{app}-operator' if (substrate == 'vm') else f'{app}-k8s-operator'
     charm_dict['packaging'] = 'snap' if (substrate == 'vm') else 'rock'
-    charm_dict['amd_revision'] = amd_revision
-    charm_dict['arm_revision'] = arm_revision
-    charm_dict['min_juju'] = dict[app]['min_juju']
-    charm_dict['all_revisions'] = dict[app][substrate]['all_revisions']
-    charm_dict['system_requirements'] = dict[app][substrate]['system_requirements']
     
-    if 'channel' in dict[app]:
-        charm_dict['channel'] = dict[app]['channel']
+    charm_dict['revisions'] = {}
+    charm_dict['revisions']['amd_22_04'] = amd_22_04 if amd_22_04 else 0
+    charm_dict['revisions']['amd_20_04'] = amd_20_04 if amd_20_04 else 0 
+    charm_dict['revisions']['arm_22_04'] = arm_22_04 if arm_22_04 else 0
+    charm_dict['revisions']['arm_20_04'] = arm_20_04 if arm_20_04 else 0
+    
+    charm_dict['min_juju'] = variables[app]['min_juju']
+    charm_dict['all_revisions'] = variables[app][substrate]['all_revisions']
+    charm_dict['system_requirements'] = variables[app][substrate]['system_requirements']
+    
+    if 'channel' in variables[app]:
+        charm_dict['channel'] = variables[app]['channel']
     else:
-        charm_dict['channel'] = dict[app][substrate]['channel'] # necessary for mysql-router
+        charm_dict['channel'] = variables[app][substrate]['channel'] # necessary for mysql-router
         
     return charm_dict
 
@@ -92,15 +104,11 @@ if __name__ == '__main__':
     with open(CONFIG_PATH) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     
-    app = config['app']
-    substrate = config['substrate']
-    arm = config['arm_revision']
-    amd = config['amd_revision']
     input_file = config['input_file']
     output_file = config['output_file']
     
-    print(f"Generating variables for {app}-{substrate}, revisions {arm}/{amd}...")
-    charm_variables = get_charm_dict(arm, amd, app, substrate)
+    charm_variables = get_charm_dict(config)
+    print(f"Generated variables for {config['app']}-{config['substrate']}, revisions {charm_variables['revisions'].values()}...")
     
     # Get release notes from GitHub 
     github_notes = ''
@@ -108,9 +116,12 @@ if __name__ == '__main__':
         with open(input_file, 'r') as file:
             github_notes = file.read()
     else:
-        tag_number = max(int(arm), int(amd)) # tag is always largest revision number
-        print(f"Requesting text from github.com/canonical/{charm_variables['repo_name']}/releases/tags/rev{tag_number}...")
-        r = requests.get(f"https://api.github.com/repos/canonical/{charm_variables['repo_name']}/releases/tags/rev{tag_number}")
+
+        tag_number = max(charm_variables['revisions'].values()) # tag is always largest revision number
+
+        request_url = f"https://api.github.com/repos/canonical/{charm_variables['repo_name']}/releases/tags/rev{tag_number}"
+        # request_url = f"https://api.github.com/repos/canonical/{charm_variables['repo_name']}/compare/rev240...rev{tag_number}"
+        r = requests.get(request_url)
         if r.status_code == 404:
             print("404 not found: Github API request unsuccessful")
             exit()
@@ -119,7 +130,7 @@ if __name__ == '__main__':
     print(f"Formatting commits...")
     # Isolate commits
     match = re.search(
-        r"## What's Changed\s*(.*?)\s*\n\n",
+        r"(?im)^##\s*What's changed[^\n]*\n((?:\s*\*\s+.*\n)+)",
         github_notes,
         flags=re.DOTALL,
     )
@@ -146,13 +157,13 @@ if __name__ == '__main__':
     file_loader = FileSystemLoader(TEMPLATES_PATH)
     env = Environment(loader=file_loader)
     
-    template = env.get_template(f"{app}.md.jinja")
+    template = env.get_template(f"{config['app']}.md.jinja")
 
     # Render release notes from template and write to file
     output_text = template.render(charm=charm_variables, commits=commits_variables)
     if not output_file:
-        output_file = f'{app}-{substrate}-release-notes.md'
+        output_file = f"{config['app']}-{config['substrate']}-release-notes.md"
     with open(output_file, 'w') as f:
         f.write(output_text)
         
-    print(f"Formatted release notes for {charm_variables['display_name']} Revision {amd}/{arm} saved to '{output_file}'")
+    print(f"Formatted release notes for {charm_variables['display_name']} saved to '{output_file}'")

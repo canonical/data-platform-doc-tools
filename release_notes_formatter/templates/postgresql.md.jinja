@@ -1,10 +1,12 @@
 {% extends 'base.md.jinja' %}
 
-{% block packaging %}* [postgresql `v.14.11`]
+{% block packaging %}
+This charm is based on the Charmed {{ charm.display_name }}{% if charm.packaging == 'snap' %} [snap Revision 112/113] {% else %} [rock image]{% endif %}. It packages:
+* [postgresql `v.14.11`]
 * [pgbouncer `v.1.21`]
 * [patroni `v.3.1.2 `]
 * [pgBackRest `v.2.48`]
-* prometheus-postgres-exporter `v.0.12.1`
+* [prometheus-postgres-exporter `v.0.12.1`]
 {% endblock %}
 
 {% block libraries %}
@@ -19,11 +21,12 @@
 {% endblock %}
 
 {% block links %}
-[112/113]: https://github.com/canonical/charmed-postgresql-snap/releases/tag/rev113
+[snap Revision 112/113]: https://github.com/canonical/charmed-postgresql-snap/releases/tag/rev113
 [rock image]: ghcr.io/canonical/charmed-postgresql@sha256:7ef86a352c94e2a664f621a1cc683d7a983fd86e923d98c32b863f717cb1c173 
 
-[postgresql `v.14.11`]: https://launchpad.net/ubuntu/+source/postgresql-14/14.11-0ubuntu0.22.04.1)
+[postgresql `v.14.11`]: https://launchpad.net/ubuntu/+source/postgresql-14/14.11-0ubuntu0.22.04.1
 [pgbouncer `v.1.21`]: https://launchpad.net/~data-platform/+archive/ubuntu/pgbouncer
 [patroni `v.3.1.2 `]: https://launchpad.net/~data-platform/+archive/ubuntu/patroni
 [pgBackRest `v.2.48`]: https://launchpad.net/~data-platform/+archive/ubuntu/pgbackrest
+[prometheus-postgres-exporter `v.0.12.1`]: https://launchpad.net/~data-platform/+archive/ubuntu/postgres-exporter
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.md.jinja' %}
+
+{% block packaging %}
+This charm is based on the Charmed{{ charm.display_name }}{% if charm.packaging == 'snap' %} [snap Revision 3/4] {% else %} [rock image]{% endif %}. It packages:
+* [pgbouncer `v.1.21`]
+* [prometheus-pgbouncer-exporter `v.0.7.0`]
+{% endblock %}
+
+{% block libraries %}
+* **grafana_agent `v0`** for integration with Grafana 
+    * Implements  `cos_agent` interface
+* **rolling_ops `v0`** for rolling operations across units 
+    * Implements `rolling_op` interface
+* **tempo_k8s `v1`, `v2`** for integration with Tempo charm
+    * Implements `tracing` interface
+* **tls_certificates_interface `v2`** for integration with TLS charms
+    * Implements `tls-certificates` interface
+{% endblock %}
+
+{% block links %}
+[snap Revision 3/4]: https://github.com/canonical/charmed-pgbouncer-snap/releases/tag/rev4
+[rock image]: https://github.com/orgs/canonical/packages?repo_name=charmed-pgbouncer-rock
+
+[pgbouncer `v.1.21`]: https://launchpad.net/~data-platform/+archive/ubuntu/pgbouncer
+[prometheus-pgbouncer-exporter]: https://launchpad.net/~data-platform/+archive/ubuntu/pgbouncer-exporter
+{% endblock %}

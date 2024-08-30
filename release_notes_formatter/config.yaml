@@ -5,11 +5,10 @@ app: mysql
 
 # (Required) Substrate: vm, k8s
 substrate: vm
-
-# (Required) Revisions for each build
-# TODO: add bases
-arm_revision: 269
-amd_revision: 268
+amd_22_04: 466
+amd_20_04: ''
+arm_22_04: 465
+arm_20_04: ''
 
 # (Optional) Output file for formatted release notes
 # Default: Write to {app}-{substrate}-release-notes.md
