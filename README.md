@@ -18,23 +18,23 @@ E.g. `postgresql-k8s/h-deploy-gke.md`
 5. Close the PR without merging.
 
 ## Generate release notes
-Located at [`release_notes_formatter/`](release_notes_formatter/)/
-
-The [`generate.py`](release_notes_formatter/generate.py) script creates formatted release notes from GitHub commits for a given revision.
+[`release_notes_formatter`](release_notes_formatter/): Create formatted release notes from GitHub commits for a given revision.
 
 ### Usage
-First, fill in `config.yaml` with the right charm and revisions. See [Configuration](#configuration) for more information.
+1. Fill in `config.yaml` with the relevant charm and revisions. See [Configuration](#configuration) for more information.
 
-Then, run `generate.py`.
+2. Run `generate.py`.
 ```shell
 cd release_notes_formatter
 python3 generate.py
 ```
 
 ### Configuration
-[`config.yaml`](release_notes_formatter/config.yaml)
+[`release_notes_formatter/config.yaml`](release_notes_formatter/config.yaml)
 
-The script loads the `config.yaml` file containing parameters about the product and revision. For example:
+This file contains parameters defining the product and revisions. The script loads it automatically.
+
+Example:
 ```yaml
 # (Required) Application name: mysql, postgresql, pgbouncer, mysql-router
 app: mysql
