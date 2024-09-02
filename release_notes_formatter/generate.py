@@ -57,23 +57,6 @@ def format_line(line):
     line = "* " + line
     return line
 
-def find_key(d, key):
-    if key in d:
-        return d[key]
-
-    for key, value in d.items():
-        if isinstance(value, dict):
-            result = find_key(value, key)
-            if result is not None:
-                return result
-        elif isinstance(value, list):
-            for item in value:
-                if isinstance(item, dict):
-                    result = find_key(item, key)
-                    if result is not None:
-                        return result
-    return None 
-    
 def get_charm_dict(config):
     with open(VARIABLES_PATH) as f:
         variables = yaml.load(f, Loader=yaml.FullLoader)
