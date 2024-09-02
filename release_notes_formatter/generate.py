@@ -1,6 +1,6 @@
 import re
 import yaml
-import json
+import base64
 import requests
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
@@ -57,6 +57,23 @@ def format_line(line):
     line = "* " + line
     return line
 
+def find_key(d, key):
+    if key in d:
+        return d[key]
+
+    for key, value in d.items():
+        if isinstance(value, dict):
+            result = find_key(value, key)
+            if result is not None:
+                return result
+        elif isinstance(value, list):
+            for item in value:
+                if isinstance(item, dict):
+                    result = find_key(item, key)
+                    if result is not None:
+                        return result
+    return None 
+    
 def get_charm_dict(config):
     with open(VARIABLES_PATH) as f:
         variables = yaml.load(f, Loader=yaml.FullLoader)
@@ -83,7 +100,7 @@ def get_charm_dict(config):
     charm_dict['revision']['arm_22_04'] = arm_22_04 if arm_22_04 else 0
     charm_dict['revision']['arm_20_04'] = arm_20_04 if arm_20_04 else 0
     
-    charm_dict['min_juju'] = variables[app]['min_juju'] # TODO: currently unused
+    charm_dict['tag_number'] = max(charm_dict['revision'].values()) # tag is always largest revision number
     
     charm_dict['topic'] = {}
     charm_dict['topic']['all_revisions'] = variables[app][substrate]['all_revisions']
@@ -93,6 +110,31 @@ def get_charm_dict(config):
         charm_dict['channel'] = variables[app]['channel']
     else:
         charm_dict['channel'] = variables[app][substrate]['channel'] # necessary for mysql-router
+    
+    # Try to get juju versions from metadata.yaml
+    charm_dict['min_juju'] = ''
+    charm_dict['max_juju'] = ''
+    
+    request_url = f"https://api.github.com/repos/canonical/{charm_dict['repo_name']}/contents/metadata.yaml"
+    params = {'ref': f"rev{charm_dict['tag_number']}"}
+    r = requests.get(request_url, params)
+    if r.status_code == 200:
+        content = base64.b64decode(r.json()['content']).decode('utf-8')
+        content = yaml.load(content, Loader=yaml.FullLoader)
+        juju_versions = {}
+        if "assumes" in content:
+            assumes = content["assumes"]
+            for i in assumes:
+                if type(i) == dict:
+                    if "any-of" in i:
+                        juju_versions = [item['all-of'] for item in i['any-of']]
+                        
+                        version_pattern = r'(\d+(\.\d+)*)'
+                        min_version = re.search(version_pattern, juju_versions[0][0]).group(1)
+                        max_version = re.search(version_pattern, juju_versions[-1][-1]).group(1)
+                        
+                        charm_dict['min_juju'] = min_version
+                        charm_dict['max_juju'] = max_version
         
     return charm_dict
 
@@ -105,8 +147,7 @@ if __name__ == '__main__':
     charm_variables = get_charm_dict(config)
     
     # Get list of commits from GitHub 
-    tag_number = max(charm_variables['revision'].values()) # tag is always largest revision number
-    request_url = f"https://api.github.com/repos/canonical/{charm_variables['repo_name']}/compare/rev{config['last_revision']}...rev{tag_number}"
+    request_url = f"https://api.github.com/repos/canonical/{charm_variables['repo_name']}/compare/rev{config['last_revision']}...rev{charm_variables['tag_number']}"
     print(f"Requesting commits from GitHub API: {request_url}")
     r = requests.get(request_url)
     if r.status_code == 404:
@@ -150,7 +191,7 @@ if __name__ == '__main__':
     
     output_file = config['output_file']
     if not output_file:
-        output_file = f"{config['app']}-{config['substrate']}-release-notes.md"
+        output_file = f"{config['app']}-{config['substrate']}-release-notes-{charm_variables['tag_number']}.md"
     with open(output_file, 'w') as f:
         f.write(output_text)
         
