@@ -39,8 +39,11 @@ This section contains some technical details about the charm's contents and depe
 If you are jumping over several stable revisions, check [previous release notes][All revisions] before upgrading.
 
 ### Requirements
-{% if min_juju %}This revision was tested on Juju versions `{{ min_juju }}` to `{{ max_juju }}`.{% endif %} 
-See the [system requirements] page for more details about Juju versions and other software and hardware prerequisites.
+This revision was tested with:
+{% if min_juju %}* Juju `v.{{ min_juju }}` to `v.{{ max_juju }}`.{% endif %}
+{% if cloud_version %}* {{ cloud_type }} `v.{{ cloud_version }}`.{% endif %}
+
+See the [system requirements] for more details about Juju versions and other software and hardware prerequisites.
 
 ### Packaging
 {% block packaging %}
