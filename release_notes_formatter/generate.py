@@ -7,7 +7,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 VARIABLES_PATH = Path('variables.yaml')
-CONFIG_PATH = Path('test_config.yaml')
+CONFIG_PATH = Path('config.yaml')
 TEMPLATES_PATH = Path('templates/')
 
 @dataclass
