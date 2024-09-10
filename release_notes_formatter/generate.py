@@ -1,3 +1,4 @@
+from dataclasses import *
 import re
 import yaml
 import base64
@@ -9,6 +10,85 @@ VARIABLES_PATH = Path('variables.yaml')
 CONFIG_PATH = Path('config.yaml')
 TEMPLATES_PATH = Path('templates/')
 
+@dataclass
+class CharmParameters:
+    name: dict
+    substrate: str
+    packaging: str
+            
+    revision: dict
+    tag_number: str
+    channel: str
+    
+    cloud_version: str
+    cloud_type: str
+
+    topic: dict
+    
+    def __init__(self):
+        config = {}
+        with open(CONFIG_PATH) as f:
+            config = yaml.load(f, Loader=yaml.FullLoader)
+        
+        variables = {}
+        with open(VARIABLES_PATH) as f:
+            variables = yaml.load(f, Loader=yaml.FullLoader)
+        
+        self.name = {}
+        self.name['app'] = config['app']
+        self.substrate = config['substrate']
+        self.packaging = 'snap' if (self.substrate == 'vm') else 'rock'        
+        
+        self.name['display'] = variables[self.name['app']][self.substrate]['display_name']
+        self.name['repo'] = f"{self.name['app']}-operator" if (self.substrate == 'vm') else f"{self.name['app']}-k8s-operator"
+        
+        self.revision = {}
+        self.revision['last_revision'] = config['last_revision']
+        self.revision['amd_22_04'] = config['amd_22_04'] if config['amd_22_04'] else 0
+        self.revision['amd_20_04'] = config['amd_20_04'] if config['amd_20_04'] else 0 
+        self.revision['arm_22_04'] = config['arm_22_04'] if config['arm_22_04'] else 0
+        self.revision['arm_20_04'] = config['arm_20_04'] if config['arm_20_04'] else 0
+    
+        # Discourse topics (e.g. '/t/123')
+        self.topic = {}
+        self.topic['all_revisions'] = variables[self.name['app']][self.substrate]['all_revisions']
+        self.topic['system_requirements'] = variables[self.name['app']][self.substrate]['system_requirements']
+        
+        # TODO: change to full tag with 'rev'
+        self.tag_number = max(self.revision.values()) # tag is always largest revision number
+        
+        # Charmhub channel (e.g. '1/stable')
+        if 'channel' in variables[self.name['app']]:
+            self.channel = variables[self.name['app']]['channel']
+        else:
+            self.channel = variables[self.name['app']][self.substrate]['channel'] # necessary for mysql-router
+        
+        self.cloud_type, self.cloud_version = self.get_cloud_version()
+        
+    
+    def get_cloud_version(self):
+        cloud_type = ''
+        cloud_version = ''
+        
+        request_url = f"https://api.github.com/repos/canonical/{self.name['repo']}/contents/.github/workflows/ci.yaml"
+        params = {'ref': f"rev{self.tag_number}"}
+        r = requests.get(request_url, params)
+        if r.status_code == 200:
+            content = base64.b64decode(r.json()['content']).decode('utf-8')
+            content = yaml.load(content, Loader=yaml.FullLoader)
+            
+            if "cloud" in content["jobs"]["integration-test"]["with"]:
+                cloud_type = content["jobs"]["integration-test"]["with"]["cloud"]
+                
+                cloud_version_key = f"{cloud_type}-snap-channel"
+                if cloud_version_key in content["jobs"]["integration-test"]["with"]:
+                    cloud_version = content["jobs"]["integration-test"]["with"][cloud_version_key]
+            
+        return cloud_type, cloud_version
+        
+    def get_microk8s_version(self):
+        print('microk8s')
+            
 def classify_messages(commits):
     bot = [] # bot actions
     jira = [] # prefaced by Jira ticket
@@ -43,7 +123,7 @@ def format_line(line):
     
     if pr_match: # Transform into hyperlink
         pr_num = pr_match.group(1)
-        pr_url = f"https://github.com/canonical/{charm_variables['repo_name']}/pull/{pr_num}"
+        pr_url = f"https://github.com/canonical/{params.name['repo']}/pull/{pr_num}"
         
         line = re.sub(pr_pattern, f"([PR #{pr_num}]({pr_url}))", line)
         line = line.strip()
@@ -57,80 +137,12 @@ def format_line(line):
     line = "* " + line
     return line
 
-def get_charm_dict(config):
-    with open(VARIABLES_PATH) as f:
-        variables = yaml.load(f, Loader=yaml.FullLoader)
-    
-    # Extract input data from config.yaml
-    app = config['app']
-    substrate = config['substrate']
-    amd_22_04 = config['amd_22_04']
-    amd_20_04 = config['amd_20_04']
-    arm_22_04 = config['arm_22_04']
-    arm_20_04 = config['arm_20_04']
-   
-    # Generate charm variables for template
-    charm_dict = {}
-    charm_dict['app'] = app
-    charm_dict['substrate'] = substrate
-    charm_dict['display_name'] = variables[app][substrate]['display_name']
-    charm_dict['repo_name'] = f'{app}-operator' if (substrate == 'vm') else f'{app}-k8s-operator'
-    charm_dict['packaging'] = 'snap' if (substrate == 'vm') else 'rock'
-    
-    charm_dict['revision'] = {}
-    charm_dict['revision']['amd_22_04'] = amd_22_04 if amd_22_04 else 0
-    charm_dict['revision']['amd_20_04'] = amd_20_04 if amd_20_04 else 0 
-    charm_dict['revision']['arm_22_04'] = arm_22_04 if arm_22_04 else 0
-    charm_dict['revision']['arm_20_04'] = arm_20_04 if arm_20_04 else 0
-    
-    charm_dict['tag_number'] = max(charm_dict['revision'].values()) # tag is always largest revision number
-    
-    charm_dict['topic'] = {}
-    charm_dict['topic']['all_revisions'] = variables[app][substrate]['all_revisions']
-    charm_dict['topic']['system_requirements'] = variables[app][substrate]['system_requirements']
-    
-    if 'channel' in variables[app]:
-        charm_dict['channel'] = variables[app]['channel']
-    else:
-        charm_dict['channel'] = variables[app][substrate]['channel'] # necessary for mysql-router
-    
-    # Try to get juju versions from metadata.yaml
-    charm_dict['min_juju'] = ''
-    charm_dict['max_juju'] = ''
-    
-    request_url = f"https://api.github.com/repos/canonical/{charm_dict['repo_name']}/contents/metadata.yaml"
-    params = {'ref': f"rev{charm_dict['tag_number']}"}
-    r = requests.get(request_url, params)
-    if r.status_code == 200:
-        content = base64.b64decode(r.json()['content']).decode('utf-8')
-        content = yaml.load(content, Loader=yaml.FullLoader)
-        juju_versions = {}
-        if "assumes" in content:
-            assumes = content["assumes"]
-            for i in assumes:
-                if type(i) == dict:
-                    if "any-of" in i:
-                        juju_versions = [item['all-of'] for item in i['any-of']]
-                        
-                        version_pattern = r'(\d+(\.\d+)*)'
-                        min_version = re.search(version_pattern, juju_versions[0][0]).group(1)
-                        max_version = re.search(version_pattern, juju_versions[-1][-1]).group(1)
-                        
-                        charm_dict['min_juju'] = min_version
-                        charm_dict['max_juju'] = max_version
-        
-    return charm_dict
-
 if __name__ == '__main__':
     
-    # Load input parameters from `config.yaml`
-    with open(CONFIG_PATH) as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
-       
-    charm_variables = get_charm_dict(config)
+    params = CharmParameters()
     
     # Get list of commits from GitHub 
-    request_url = f"https://api.github.com/repos/canonical/{charm_variables['repo_name']}/compare/rev{config['last_revision']}...rev{charm_variables['tag_number']}"
+    request_url = f"https://api.github.com/repos/canonical/{params.name['repo']}/compare/rev{params.revision['last_revision']}...rev{params.tag_number}"
     print(f"Requesting commits from GitHub API: {request_url}")
     r = requests.get(request_url)
     if r.status_code == 404:
@@ -167,15 +179,15 @@ if __name__ == '__main__':
 
     # Set up jinja environment
     env = Environment(loader=FileSystemLoader(TEMPLATES_PATH))
-    template = env.get_template(f"{config['app']}.md.jinja")
+    template = env.get_template(f"{params.name['app']}.md.jinja")
 
     # Render release notes from template and write to file
+    charm_variables = asdict(params)
     output_text = template.render(charm_variables, commits=commits_variables)
     
-    output_file = config['output_file']
-    if not output_file:
-        output_file = f"{config['app']}-{config['substrate']}-release-notes-{charm_variables['tag_number']}.md"
+
+    output_file = f"{params.name['app']}-{params.substrate}-release-notes-{params.tag_number}.md"
     with open(output_file, 'w') as f:
         f.write(output_text)
         
-    print(f"Formatted release notes for {charm_variables['display_name']} revisions {charm_variables['revision'].values()} saved to '{output_file}'")
+    print(f"Formatted release notes for {params.name['display']} revisions {params.revision.values()} saved to '{output_file}'")

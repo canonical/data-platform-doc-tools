@@ -1,12 +1,12 @@
 >Reference > Release Notes > [All revisions] > Revision {{ revision.arm_22_04 }}/{{ revision.amd_22_04 }}
 
-# Revision {{ revision.arm_22_04 }}/{{ revision.amd_22_04 }}
+# Revision {{ revision.arm_22_04 }}/{{ revision.amd_22_04 }}{% if revision.arm_20_04 %}/{{ revision.arm_20_04 }}{% endif %}{% if revision.amd_20_04 %}/{{ revision.amd_20_04 }}{% endif %}
 
 Dear community,
 
-Canonical's newest Charmed {{ display_name }} operator has been published in the [{{ channel }} channel].
+Canonical's newest Charmed {{ name.display }} operator has been published in the [{{ channel }} channel].
 
-Due to the newly added support for `arm64` architecture, the {{ display_name }} charm now releases multiple revisions simultaneously:
+Due to the newly added support for `arm64` architecture, the {{ name.display }} charm now releases multiple revisions simultaneously:
 * Revision {{ revision.amd_22_04 }} is built for `amd64` on Ubuntu 22.04 LTS
 {% if revision.amd_20_04 %}* Revision {{ revision.amd_20_04 }} is built for `amd64` on Ubuntu 20.04 LTS{% endif %}
 * Revision {{ revision.arm_22_04 }} is built for `arm64` on Ubuntu 22.04 LTS
@@ -16,7 +16,7 @@ To make sure you deploy for the right architecture, we recommend setting an [arc
 
 Otherwise, it can be done at deploy time with the `--constraints` flag:
 ```shell
-juju deploy {{ app }}{% if substrate == 'k8s' %}-k8s --trust{% endif %} --constraints arch=<arch> 
+juju deploy {{ name.app }}{% if substrate == 'k8s' %}-k8s --trust{% endif %} --constraints arch=<arch> 
 ```
 where `<arch>` can be `amd64` or `arm64`.
 
@@ -39,8 +39,9 @@ This section contains some technical details about the charm's contents and depe
 If you are jumping over several stable revisions, check [previous release notes][All revisions] before upgrading.
 
 ### Requirements
-{% if min_juju %}This revision was tested on Juju versions `{{ min_juju }}` to `{{ max_juju }}`.{% endif %} 
-See the [system requirements] page for more details about Juju versions and other software and hardware prerequisites.
+See the [system requirements] for more details about Juju versions and other software and hardware prerequisites.
+
+{% if cloud_version %} This revision was tested on {{ cloud_type }} `v.{{ cloud_version }}`.{% endif %}
 
 ### Packaging
 {% block packaging %}
@@ -60,14 +61,14 @@ See the [`metadata.yaml` file on GitHub] for a full list of supported interfaces
 [system requirements]: {{ topic.system_requirements }}
 
 <!-- GitHub -->
-[`/lib/charms` directory on GitHub]: https://github.com/canonical/{{ repo_name }}/tree/main/lib/charms
-[`metadata.yaml` file on GitHub]: https://github.com/canonical/{{ repo_name }}/blob/main/metadata.yaml
+[`/lib/charms` directory on GitHub]: https://github.com/canonical/{{ name.repo }}/tree/main/lib/charms
+[`metadata.yaml` file on GitHub]: https://github.com/canonical/{{ name.repo }}/blob/main/metadata.yaml
 
 <!-- Charmhub -->
-[{{ channel }} channel]: https://charmhub.io/{{ app }}?channel={{ channel }}
+[{{ channel }} channel]: https://charmhub.io/{{ name.app }}?channel={{ channel }}
 
 <!-- Snap/Rock -->
-[`charmed-{{ app }}` packaging]: https://github.com/canonical/charmed-{{ app }}-{{ packaging }}
+[`charmed-{{ name.app }}` packaging]: https://github.com/canonical/charmed-{{ name.app }}-{{ packaging }}
 {% block links %}
 {% endblock %}
 

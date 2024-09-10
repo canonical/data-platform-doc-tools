@@ -1,20 +1,16 @@
 # Configuration parameters for Release Notes
 
 # (Required) Application name: mysql, postgresql, pgbouncer, mysql-router
-app: postgresql
+app: pgbouncer
 
 # (Required) Substrate: vm, k8s
 substrate: k8s
 
 # (Required) Old revision to compare (usually previous stable)
-last_revision: 351
+last_revision: 229
 
 # (Required) Revisions for each arch/base
-amd_22_04: 363
+amd_22_04: 269
 amd_20_04: 
-arm_22_04: 364
+arm_22_04: 268
 arm_20_04: 
-
-# (Optional) Output file for formatted release notes
-# Default: {app}-{substrate}-release-notes.md
-output_file: ''
