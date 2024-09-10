@@ -20,9 +20,6 @@ class CharmParameters:
     tag_number: str
     channel: str
     
-    min_juju: str
-    max_juju: str
-    
     cloud_version: str
     cloud_type: str
 
@@ -66,35 +63,8 @@ class CharmParameters:
         else:
             self.channel = variables[self.name['app']][self.substrate]['channel'] # necessary for mysql-router
         
-        self.min_juju, self.max_juju = self.get_juju_versions()
-        
         self.cloud_type, self.cloud_version = self.get_cloud_version()
         
-    def get_juju_versions(self):
-        min_juju = ''
-        max_juju = ''
-        
-        request_url = f"https://api.github.com/repos/canonical/{self.name['repo']}/contents/metadata.yaml"
-        params = {'ref': f"rev{self.tag_number}"}
-        r = requests.get(request_url, params)
-        if r.status_code == 200:
-            content = base64.b64decode(r.json()['content']).decode('utf-8')
-            content = yaml.load(content, Loader=yaml.FullLoader)
-            juju_versions = {}
-            if "assumes" in content:
-                assumes = content["assumes"]
-                for i in assumes:
-                    if type(i) == dict:
-                        if "any-of" in i:
-                            juju_versions = [item['all-of'] for item in i['any-of']]
-                            
-                            version_pattern = r'(\d+(\.\d+)*)'
-                            min_version = re.search(version_pattern, juju_versions[0][0]).group(1)
-                            max_version = re.search(version_pattern, juju_versions[-1][-1]).group(1)
-                            
-                            min_juju = min_version
-                            max_juju = max_version
-        return min_juju, max_juju
     
     def get_cloud_version(self):
         cloud_type = ''

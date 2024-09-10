@@ -2,7 +2,6 @@
 
 postgresql:
   channel: '14/stable'
-  min_juju: '2.9.49'
   vm:
     display_name: 'PostgreSQL'
     all_revisions: '/t/11875'
@@ -14,7 +13,6 @@ postgresql:
 
 mysql:
   channel: '8.0/stable'
-  min_juju: '`v.3.4.3` or `3.5.2+`'
   vm:
     display_name: 'MySQL'
     all_revisions: '/t/11881'
@@ -26,7 +24,6 @@ mysql:
 
 pgbouncer:
   channel: '1/stable'
-  min_juju: '2.9.49'
   vm:
     display_name: 'PgBouncer'
     all_revisions: '/t/12285'
@@ -37,7 +34,6 @@ pgbouncer:
     system_requirements: '/t/12263'
 
 mysql-router:
-  min_juju: '`v.3.4.3` or `3.5.2+`'
   vm:
     channel: 'dpe/candidate'
     display_name: 'MySQL Router'
