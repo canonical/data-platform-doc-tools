@@ -1,7 +1,7 @@
 {% extends 'base.md.jinja' %}
 
 {% block packaging %}
-This charm is based on the Charmed {{ display_name }}{% if packaging == 'snap' %} [snap Revision 112/113] {% else %} [rock image]{% endif %}. It packages:
+This charm is based on the Charmed {{ name.display }}{% if packaging == 'snap' %} [snap Revision 112/113] {% else %} [rock image]{% endif %}. It packages:
 * [postgresql `v.14.11`]
 * [pgbouncer `v.1.21`]
 * [patroni `v.3.1.2 `]

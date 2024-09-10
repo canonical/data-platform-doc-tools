@@ -15,7 +15,7 @@ $ cd release_notes_formatter
 
 $ nano config.yaml
 app: postgresql
-substrate: k8s
+substrate: vm
 last_revision: 351
 
 amd_22_04: 363
