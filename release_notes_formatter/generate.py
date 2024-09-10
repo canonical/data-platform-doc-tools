@@ -7,7 +7,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 VARIABLES_PATH = Path('variables.yaml')
-CONFIG_PATH = Path('config.yaml')
+CONFIG_PATH = Path('test_config.yaml')
 TEMPLATES_PATH = Path('templates/')
 
 @dataclass
@@ -81,7 +81,8 @@ class CharmParameters:
                 cloud_type = content["jobs"]["integration-test"]["with"]["cloud"]
                 
                 cloud_version_key = f"{cloud_type}-snap-channel"
-                cloud_version = content["jobs"]["integration-test"]["with"][cloud_version_key]
+                if cloud_version_key in content["jobs"]["integration-test"]["with"]:
+                    cloud_version = content["jobs"]["integration-test"]["with"][cloud_version_key]
             
         return cloud_type, cloud_version
         
