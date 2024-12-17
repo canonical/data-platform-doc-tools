@@ -63,7 +63,9 @@ class CharmParameters:
         else:
             self.channel = variables[self.name['app']][self.substrate]['channel'] # necessary for mysql-router
         
-        self.cloud_type, self.cloud_version = self.get_cloud_version()
+        # self.cloud_type, self.cloud_version = self.get_cloud_version()
+        self.cloud_type = ''
+        self.cloud_version = ''
         
     
     def get_cloud_version(self):
@@ -91,24 +93,26 @@ class CharmParameters:
             
 def classify_messages(commits):
     bot = [] # bot actions
-    jira = [] # prefaced by Jira ticket
-    other = [] # prefaced by [MISC] or none of the above
+    bug = [] # prefaced by 'Fix' or 'Fixed'
+    other = [] # none of the above
     for i in commits:
         message = commits[i]['message']
         if commits[i]['author'][-5:] == "[bot]":
             bot.append(message)
-        elif message[0:7] == "[DPE-":
-            jira.append(commits[i])
-        elif message[0:6] == "[MISC]":
+            continue
+        
+        if message[0:6] == "[MISC]":
             message = message.replace('[MISC]','')
-            other.append(message)
+        
+        if 'fix' in message.lower():
+            bug.append(message)
         else:
             other.append(message)
     
     # Sort bot commits incrementally for readability
     bot = sorted(bot, key=str.lower)
     
-    return bot, jira, other
+    return bot, bug, other
             
 def format_line(line):
     '''
@@ -138,9 +142,9 @@ def format_line(line):
     return line
 
 if __name__ == '__main__':
+    commits_only = False
     
     params = CharmParameters()
-    
     # Get list of commits from GitHub 
     request_url = f"https://api.github.com/repos/canonical/{params.name['repo']}/compare/rev{params.revision['last_revision']}...rev{params.tag_number}"
     print(f"Requesting commits from GitHub API: {request_url}")
@@ -152,12 +156,14 @@ if __name__ == '__main__':
     results = r.json().get("commits", [])
     
     # Extract commit heading (i.e. PR title) and author
+    print('Extracting commit messages...')
     commits = {}
     for i in range (0,len(results)):
         commit_info = {}
         commit_info['author'] = results[i]['author']['login']
         
         message = results[i]['commit']['message']
+        # print(message)
         end_id = message.find('\n')
         if end_id > -1:
             commit_info['message'] = message[0:end_id]
@@ -167,15 +173,15 @@ if __name__ == '__main__':
         commits[i] = commit_info
         
     # Classify commit types
-    bot, jira, other = classify_messages(commits)
+    bot, bug, other = classify_messages(commits)
 
     # Format each line and join all commits back into one string
     bot = "\n".join([format_line(line) for line in bot])
-    jira = "\n".join([format_line(line) for line in jira])
+    bug = "\n".join([format_line(line) for line in bug])
     other = "\n".join([format_line(line) for line in other])
 
     # Generate jinja variables
-    commits_variables = {'jira':jira, 'other':other, 'bot':bot}
+    commits_variables = {'bug':bug, 'other':other, 'bot':bot}
 
     # Set up jinja environment
     env = Environment(loader=FileSystemLoader(TEMPLATES_PATH))
@@ -184,7 +190,7 @@ if __name__ == '__main__':
     # Render release notes from template and write to file
     charm_variables = asdict(params)
     output_text = template.render(charm_variables, commits=commits_variables)
-    
+        
 
     output_file = f"{params.name['app']}-{params.substrate}-release-notes-{params.tag_number}.md"
     with open(output_file, 'w') as f:
