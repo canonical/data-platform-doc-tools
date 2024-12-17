@@ -2,8 +2,8 @@
 
 {% block packaging %}
 This charm is based on the Charmed{{ name.display }}{% if packaging == 'snap' %} [snap Revision 3/4] {% else %} [rock image]{% endif %}. It packages:
-* [pgbouncer `v.1.21`]
-* [prometheus-pgbouncer-exporter `v.0.7.0`]
+* [pgbouncer] `v.1.21`
+* [prometheus-pgbouncer-exporter] `v.0.7.0`
 {% endblock %}
 
 {% block libraries %}
@@ -18,9 +18,9 @@ This charm is based on the Charmed{{ name.display }}{% if packaging == 'snap' %}
 {% endblock %}
 
 {% block links %}
-[snap Revision 3/4]: https://github.com/canonical/charmed-pgbouncer-snap/releases/tag/rev4
+[snap]: https://github.com/canonical/charmed-pgbouncer-snap/
 [rock image]: https://github.com/orgs/canonical/packages?repo_name=charmed-pgbouncer-rock
 
-[pgbouncer `v.1.21`]: https://launchpad.net/~data-platform/+archive/ubuntu/pgbouncer
-[prometheus-pgbouncer-exporter `v.0.7.0`]: https://launchpad.net/~data-platform/+archive/ubuntu/pgbouncer-exporter
+[pgbouncer]: https://launchpad.net/~data-platform/+archive/ubuntu/pgbouncer
+[prometheus-pgbouncer-exporter]: https://launchpad.net/~data-platform/+archive/ubuntu/pgbouncer-exporter
 {% endblock %}

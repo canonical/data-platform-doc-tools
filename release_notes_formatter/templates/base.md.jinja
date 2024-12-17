@@ -4,57 +4,41 @@
 
 Dear community,
 
-Canonical's newest Charmed {{ name.display }} operator has been published in the [{{ channel }} channel].
-
-Due to the newly added support for `arm64` architecture, the {{ name.display }} charm now releases multiple revisions simultaneously:
+Canonical's newest Charmed {{ name.display }} operator has been published in the [{{ channel }} channel]:
 * Revision {{ revision.amd_22_04 }} is built for `amd64` on Ubuntu 22.04 LTS
 {% if revision.amd_20_04 %}* Revision {{ revision.amd_20_04 }} is built for `amd64` on Ubuntu 20.04 LTS{% endif %}
 * Revision {{ revision.arm_22_04 }} is built for `arm64` on Ubuntu 22.04 LTS
 {% if revision.arm_20_04 %}* Revision {{ revision.arm_20_04 }} is built for `arm64` on Ubuntu 20.04 LTS {% endif %}
 
-To make sure you deploy for the right architecture, we recommend setting an [architecture constraint](https://juju.is/docs/juju/constraint#heading--arch) for your entire juju model.
-
-Otherwise, it can be done at deploy time with the `--constraints` flag:
-```shell
-juju deploy {{ name.app }}{% if substrate == 'k8s' %}-k8s --trust{% endif %} --constraints arch=<arch> 
-```
-where `<arch>` can be `amd64` or `arm64`.
+If you are jumping over several stable revisions, check [previous release notes][All revisions] before upgrading.
 
 ---
 
 ## Highlights 
-{{ commits.jira }}
 {{ commits.other }}
 
-## Bugfixes
+## Bugfixes and maintenance
 
-<!--TODO: Fill in manually based on Highlights section.--> 
+{{ commits.bug }}
 
-## Dependencies and automations
+[details=Libraries, testing, and CI]
+{{ commits.jira }}
 {{ commits.bot }}
+[/details]
 
-## Technical details
-This section contains some technical details about the charm's contents and dependencies. 
+## Requirements and compatibility
+<!--TODO: workload, juju, or other important version changes -->
 
-If you are jumping over several stable revisions, check [previous release notes][All revisions] before upgrading.
-
-### Requirements
 See the [system requirements] for more details about Juju versions and other software and hardware prerequisites.
-
-{% if cloud_version %} This revision was tested on {{ cloud_type }} `v.{{ cloud_version }}`.{% endif %}
 
 ### Packaging
 {% block packaging %}
 {% endblock %}
 
-### Libraries and interfaces
-
-This charm revision imports the following libraries:
-{% block libraries %}
-{% endblock %}
 See the [`/lib/charms` directory on GitHub] for more details about all supported libraries.
 
 See the [`metadata.yaml` file on GitHub] for a full list of supported interfaces.
+
 
 <!-- Topics -->
 [All revisions]: {{ topic.all_revisions }}
@@ -73,5 +57,6 @@ See the [`metadata.yaml` file on GitHub] for a full list of supported interfaces
 {% endblock %}
 
 <!-- Badges -->
-[amd64]: https://img.shields.io/badge/amd64-darkgreen
-[arm64]: https://img.shields.io/badge/arm64-blue
+[juju-2_amd64]: https://img.shields.io/badge/Juju_2.9.51-amd64-darkgreen?labelColor=ea7d56 
+[juju-3_amd64]: https://img.shields.io/badge/Juju_3.4.6-amd64-darkgreen?labelColor=E95420 
+[juju-3_arm64]: https://img.shields.io/badge/Juju_3.4.6-arm64-blue?labelColor=E95420

@@ -37,10 +37,10 @@ mysql-router:
   vm:
     channel: 'dpe/candidate'
     display_name: 'MySQL Router'
-    all_revisions: '/t/'
-    system_requirements: '/t/'
+    all_revisions: '/t/12318'
+    system_requirements: '/t/12325'
   k8s:
     channel: '8.0/stable'
     display_name: 'MySQL Router K8s'
-    all_revisions: '/t/'
-    system_requirements: '/t/'
+    all_revisions: '/t/12201'
+    system_requirements: '/t/12179'
